@@ -33,89 +33,106 @@
             margin-bottom: 30px;
         }
 
-        .mode-toggle {
-            position: fixed;
-            top: 62px;
-            right: 18px;
-            z-index: 50;
-            appearance: none;
-            border: 1px solid #CBD5E1;
-            background: rgba(255, 255, 255, 0.94);
-            color: var(--text-main);
-            border-radius: 999px;
-            padding: 12px 16px;
-            font: inherit;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
-            backdrop-filter: blur(10px);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-        }
-
-        .mode-toggle:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
-        }
-
-        .mode-toggle.active {
-            background: #0F172A;
-            color: #FFFFFF;
-            border-color: #0F172A;
-        }
-
-        .template-switch {
-            position: fixed;
-            top: 112px;
-            right: 18px;
-            z-index: 50;
-            appearance: none;
-            border: 1px solid #CBD5E1;
-            background: rgba(255, 255, 255, 0.94);
-            color: var(--text-main);
-            border-radius: 999px;
-            padding: 10px 14px;
-            font: inherit;
-            font-size: 0.82rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
-            backdrop-filter: blur(10px);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-        }
-
-        .template-switch:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.13);
-        }
-
-        .template-switch.party-template {
-            top: 156px;
-        }
-
-        .create-new-btn {
+        .canvas-actions {
             position: fixed;
             top: 18px;
             right: 18px;
             z-index: 50;
-            appearance: none;
-            border: 1px solid #0F172A;
-            background: #0F172A;
-            color: #FFFFFF;
-            border-radius: 999px;
-            padding: 12px 16px;
-            font: inherit;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
-            backdrop-filter: blur(10px);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            width: 190px;
+            padding: 10px;
+            border: 1px solid rgba(203, 213, 225, 0.9);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+            backdrop-filter: blur(16px);
+            display: grid;
+            gap: 8px;
         }
 
-        .create-new-btn:hover {
+        .canvas-action {
+            appearance: none;
+            width: 100%;
+            border: 1px solid transparent;
+            background: rgba(248, 250, 252, 0.92);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .canvas-action::after {
+            content: attr(data-icon);
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.08);
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            font-size: 0.8rem;
+        }
+
+        .canvas-action:hover {
             transform: translateY(-1px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+            border-color: rgba(148, 163, 184, 0.75);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.10);
+        }
+
+        .canvas-action.primary {
+            background: #0F172A;
+            color: #FFFFFF;
+            border-color: #0F172A;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.20);
+        }
+
+        .canvas-action.primary::after {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .canvas-action.active {
+            background: #ECFEFF;
+            color: #155E75;
+            border-color: rgba(6, 182, 212, 0.35);
+        }
+
+        .canvas-action.active::after {
+            background: rgba(6, 182, 212, 0.14);
+        }
+
+        .canvas-action-label {
+            padding: 6px 2px 0;
+            color: var(--text-muted);
+            font-size: 0.64rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .canvas-actions {
+                position: sticky;
+                top: 12px;
+                right: auto;
+                width: auto;
+                max-width: 520px;
+                margin: 0 auto 18px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .canvas-action-label {
+                grid-column: 1 / -1;
+            }
         }
 
         .editor-bar {
@@ -677,10 +694,13 @@
 </head>
 <body>
 
-    <button class="create-new-btn" id="create-new-btn" type="button">Create new</button>
-    <button class="mode-toggle" id="toggle-edit-btn" type="button">Edit mode</button>
-    <button class="template-switch" id="restaurant-template-btn" type="button">Restaurang</button>
-    <button class="template-switch party-template" id="party-template-btn" type="button">Politiskt parti</button>
+    <div class="canvas-actions" aria-label="Canvas actions">
+        <button class="canvas-action primary" id="create-new-btn" type="button" data-icon="+">Create new</button>
+        <button class="canvas-action mode-toggle" id="toggle-edit-btn" type="button" data-icon="E">Edit mode</button>
+        <div class="canvas-action-label">Templates</div>
+        <button class="canvas-action template-switch" id="restaurant-template-btn" type="button" data-icon="R">Restaurang</button>
+        <button class="canvas-action template-switch party-template" id="party-template-btn" type="button" data-icon="P">Politiskt parti</button>
+    </div>
 
         <div class="header">
             <h1>Value Creation Canvas</h1>
@@ -781,14 +801,10 @@
         const partyTemplateState = {
             nodes: [
                 { id: 'party-root-insecurity', label: 'Känsla av otrygghet', row: 'origin', kind: 'box', order: 0 },
-                { id: 'party-root-trust', label: 'Bristande tillit till rättsstaten', row: 'origin', kind: 'box', order: 1 },
                 { id: 'party-goal-safety', label: 'Minskad otrygghet', row: 'goal', kind: 'box', order: 0 },
-                { id: 'party-goal-trust', label: 'Ökad trygghetskänsla', row: 'goal', kind: 'box', order: 1 },
-                { id: 'party-prod-police', label: 'Investering i fler poliser', row: 'prod', kind: 'box', order: 0 },
-                { id: 'party-prod-local', label: 'Mer lokal polisiär närvaro', row: 'prod', kind: 'box', order: 1 },
-                { id: 'party-act-budget', label: 'Prioritera budget', row: 'act', kind: 'box', order: 0, activityOffset: 20 },
-                { id: 'party-act-recruit', label: 'Rekrytera och utbilda', row: 'act', kind: 'box', order: 1, activityOffset: 0 },
-                { id: 'party-act-outreach', label: 'Trygghetsdialog med medborgare', row: 'act', kind: 'box', order: 2, activityOffset: -20 },
+                { id: 'party-prod-program', label: 'Partiprogram med fokus på finansiering av fler poliser', row: 'prod', kind: 'box', order: 0 },
+                { id: 'party-act-research', label: 'Gör efterforskningar och förstå problemet samt möjlig lösning', row: 'act', kind: 'box', order: 0, activityOffset: 28 },
+                { id: 'party-act-budget', label: 'Skriva avsnitt om finansiering av fler poliser', row: 'act', kind: 'box', order: 1, activityOffset: -18 },
                 { id: 'party-dept-policy', label: 'Politiska gruppen', row: 'dept', kind: 'box', order: 0 },
                 { id: 'party-dept-campaign', label: 'Kampanjgruppen', row: 'dept', kind: 'box', order: 1 },
                 { id: 'party-ind-elin', label: 'Elin', row: 'ind', kind: 'person', order: 0 },
@@ -801,27 +817,17 @@
                 { id: 'party-link-magnus-policy', from: 'party-ind-magnus', to: 'party-dept-policy' },
                 { id: 'party-link-sara-campaign', from: 'party-ind-sara', to: 'party-dept-campaign' },
                 { id: 'party-link-omar-campaign', from: 'party-ind-omar', to: 'party-dept-campaign' },
-                { id: 'party-link-policy-budget', from: 'party-dept-policy', to: 'party-act-budget' },
-                { id: 'party-link-policy-recruit', from: 'party-dept-policy', to: 'party-act-recruit' },
-                { id: 'party-link-campaign-outreach', from: 'party-dept-campaign', to: 'party-act-outreach' },
-                { id: 'party-link-budget-police', from: 'party-act-budget', to: 'party-prod-police' },
-                { id: 'party-link-recruit-police', from: 'party-act-recruit', to: 'party-prod-police' },
-                { id: 'party-link-outreach-local', from: 'party-act-outreach', to: 'party-prod-local' },
-                { id: 'party-link-police-safety', from: 'party-prod-police', to: 'party-goal-safety' },
-                { id: 'party-link-local-safety', from: 'party-prod-local', to: 'party-goal-safety' },
-                { id: 'party-link-local-trust', from: 'party-prod-local', to: 'party-goal-trust' },
-                { id: 'party-link-insecurity-safety', from: 'party-root-insecurity', to: 'party-goal-safety' },
-                { id: 'party-link-trust-trust', from: 'party-root-trust', to: 'party-goal-trust' }
+                { id: 'party-link-policy-research', from: 'party-dept-policy', to: 'party-act-research' },
+                { id: 'party-link-research-budget', from: 'party-act-research', to: 'party-act-budget' },
+                { id: 'party-link-budget-program', from: 'party-act-budget', to: 'party-prod-program' },
+                { id: 'party-link-program-safety', from: 'party-prod-program', to: 'party-goal-safety' },
+                { id: 'party-link-insecurity-safety', from: 'party-root-insecurity', to: 'party-goal-safety' }
             ],
             energyFlows: [
-                ['party-act-budget', 'party-prod-police', 'party-goal-safety'],
-                ['party-act-recruit', 'party-prod-police', 'party-goal-safety'],
-                ['party-act-outreach', 'party-prod-local', 'party-goal-safety'],
-                ['party-act-outreach', 'party-prod-local', 'party-goal-trust']
+                ['party-act-research', 'party-act-budget', 'party-prod-program', 'party-goal-safety']
             ],
             demandFlows: [
-                ['party-root-insecurity', 'party-goal-safety'],
-                ['party-root-trust', 'party-goal-trust']
+                ['party-root-insecurity', 'party-goal-safety']
             ],
             activityAssignments: {},
             disabledGoals: []
