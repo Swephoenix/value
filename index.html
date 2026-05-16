@@ -352,11 +352,47 @@
         }
 
         .row-label.label-belief {
-            color: #BE185D;
-            font-size: 0.84rem;
-            line-height: 1.18;
-            letter-spacing: 0;
             text-transform: none;
+            letter-spacing: 0;
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+
+        .belief-toggle {
+            appearance: none;
+            width: 100%;
+            border: 1px solid rgba(190, 24, 93, 0.24);
+            border-radius: 14px;
+            background: #FDF2F8;
+            color: #831843;
+            padding: 11px 13px;
+            font: inherit;
+            font-size: 0.76rem;
+            font-weight: 800;
+            line-height: 1.18;
+            text-align: right;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(190, 24, 93, 0.08);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .belief-toggle:hover {
+            transform: translateY(-1px);
+            background: #FCE7F3;
+            box-shadow: 0 14px 28px rgba(190, 24, 93, 0.12);
+        }
+
+        .belief-toggle::after {
+            content: ' +';
+            font-weight: 900;
+        }
+
+        .belief-toggle[aria-expanded="true"]::after {
+            content: ' -';
+        }
+
+        .canvas-container.belief-collapsed #row-belief {
+            display: none;
         }
 
         .row-label span.sub-label {
@@ -585,7 +621,40 @@
         }
 
         .card.origin { border-left: 4px solid var(--color-origin); background: #FEF2F2; }
-        .card.belief { border-left: 4px solid var(--color-belief); }
+        .card.belief {
+            width: 220px;
+            min-width: 220px;
+            height: 170px;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            overflow: visible;
+        }
+
+        .card.belief .thought-bubble {
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.08));
+        }
+
+        .card.belief .node-label {
+            display: flex;
+            width: 126px;
+            height: 72px;
+            align-items: center;
+            justify-content: center;
+            color: #111827;
+            font-size: 0.76rem;
+            font-weight: 800;
+            line-height: 1.12;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
         .card.prod { border-left: 4px solid var(--color-prod); }
         .card.act { border-left: 4px solid var(--color-act); }
         .card.dept { border-left: 4px solid var(--color-dept); }
@@ -717,7 +786,7 @@
             <p>Klicka på ett mål för att avaktivera/aktivera trädet.</p>
         </div>
 
-    <div class="canvas-container" id="canvas">
+    <div class="canvas-container belief-collapsed" id="canvas">
         <svg id="svg-layer">
             <defs>
                 <filter id="glowBlue"><feGaussianBlur stdDeviation="2.5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
@@ -744,7 +813,11 @@
         </div>
         <div class="row-content" id="row-goal" data-row="goal"></div>
 
-        <div class="row-label label-belief">Vad kunden inbillar sig få i utbyte mot betalning</div>
+        <div class="row-label label-belief">
+            <button class="belief-toggle" id="belief-toggle" type="button" aria-expanded="false" aria-controls="row-belief">
+                Vad kunden inbillar sig få i utbyte mot betalning
+            </button>
+        </div>
         <div class="row-content" id="row-belief" data-row="belief"></div>
 
         <div class="row-label label-prod">Lösning</div>
@@ -768,6 +841,8 @@
                 { id: 'root-social', label: 'Behov av tillhörighet', row: 'origin', kind: 'box', order: 1 },
                 { id: 'goal-food', label: 'Stilla hunger', row: 'goal', kind: 'box', order: 0 },
                 { id: 'goal-feel', label: 'Känna sig uppskattad', row: 'goal', kind: 'box', order: 1 },
+                { id: 'belief-full', label: 'Jag blir mätt och nöjd', row: 'belief', kind: 'box', order: 0 },
+                { id: 'belief-seen', label: 'Jag blir sedd som gäst', row: 'belief', kind: 'box', order: 1 },
                 { id: 'prod-burger', label: 'Vällagad Hamburgare', row: 'prod', kind: 'box', order: 0 },
                 { id: 'prod-service', label: 'Varmt bemötande', row: 'prod', kind: 'box', order: 1 },
                 { id: 'act-buy', label: 'Inköp', row: 'act', kind: 'box', order: 0, activityOffset: 30 },
@@ -792,16 +867,18 @@
                 { id: 'link-act-buy-prod-burger', from: 'act-buy', to: 'prod-burger' },
                 { id: 'link-act-serve-prod-burger', from: 'act-serve', to: 'prod-burger' },
                 { id: 'link-act-serve-prod-service', from: 'act-serve', to: 'prod-service' },
-                { id: 'link-prod-burger-goal-food', from: 'prod-burger', to: 'goal-food' },
-                { id: 'link-prod-service-goal-feel', from: 'prod-service', to: 'goal-feel' },
+                { id: 'link-prod-burger-belief-full', from: 'prod-burger', to: 'belief-full' },
+                { id: 'link-prod-service-belief-seen', from: 'prod-service', to: 'belief-seen' },
+                { id: 'link-belief-full-goal-food', from: 'belief-full', to: 'goal-food' },
+                { id: 'link-belief-seen-goal-feel', from: 'belief-seen', to: 'goal-feel' },
                 { id: 'link-root-hunger-goal-food', from: 'root-hunger', to: 'goal-food' },
                 { id: 'link-root-social-goal-feel', from: 'root-social', to: 'goal-feel' }
             ],
             energyFlows: [
-                ['act-cook', 'prod-burger', 'goal-food'],
-                ['act-buy', 'prod-burger', 'goal-food'],
-                ['act-serve', 'prod-burger', 'goal-food'],
-                ['act-serve', 'prod-service', 'goal-feel']
+                ['act-cook', 'prod-burger', 'belief-full', 'goal-food'],
+                ['act-buy', 'prod-burger', 'belief-full', 'goal-food'],
+                ['act-serve', 'prod-burger', 'belief-full', 'goal-food'],
+                ['act-serve', 'prod-service', 'belief-seen', 'goal-feel']
             ],
             demandFlows: [
                 ['root-hunger', 'goal-food'],
@@ -815,6 +892,7 @@
             nodes: [
                 { id: 'party-root-insecurity', label: 'Känsla av otrygghet', row: 'origin', kind: 'box', order: 0 },
                 { id: 'party-goal-safety', label: 'Minskad otrygghet', row: 'goal', kind: 'box', order: 0 },
+                { id: 'party-belief-police', label: 'Fler poliser gör området tryggare', row: 'belief', kind: 'box', order: 0 },
                 { id: 'party-prod-program', label: 'Förslag om finansiering av fler poliser i partiprogrammet', row: 'prod', kind: 'box', order: 0 },
                 { id: 'party-act-research', label: 'Gör efterforskningar och förstå problemet samt möjlig lösning', row: 'act', kind: 'box', order: 0, activityOffset: 28 },
                 { id: 'party-act-budget', label: 'Skriva avsnitt om finansiering av fler poliser', row: 'act', kind: 'box', order: 1, activityOffset: -18 },
@@ -833,11 +911,12 @@
                 { id: 'party-link-policy-research', from: 'party-dept-policy', to: 'party-act-research' },
                 { id: 'party-link-research-budget', from: 'party-act-research', to: 'party-act-budget' },
                 { id: 'party-link-budget-program', from: 'party-act-budget', to: 'party-prod-program' },
-                { id: 'party-link-program-safety', from: 'party-prod-program', to: 'party-goal-safety' },
+                { id: 'party-link-program-belief-police', from: 'party-prod-program', to: 'party-belief-police' },
+                { id: 'party-link-belief-police-safety', from: 'party-belief-police', to: 'party-goal-safety' },
                 { id: 'party-link-insecurity-safety', from: 'party-root-insecurity', to: 'party-goal-safety' }
             ],
             energyFlows: [
-                ['party-act-research', 'party-act-budget', 'party-prod-program', 'party-goal-safety']
+                ['party-act-research', 'party-act-budget', 'party-prod-program', 'party-belief-police', 'party-goal-safety']
             ],
             demandFlows: [
                 ['party-root-insecurity', 'party-goal-safety']
@@ -931,6 +1010,7 @@
         let contextMenuNodeId = null;
         let drawQueued = false;
         let suppressNextNodeClick = false;
+        let beliefExpanded = false;
         const physicsOffsets = new Map();
 
         const canvas = document.getElementById('canvas');
@@ -940,6 +1020,7 @@
         const editorNote = document.getElementById('editor-note');
         const createNewBtn = document.getElementById('create-new-btn');
         const toggleEditBtn = document.getElementById('toggle-edit-btn');
+        const beliefToggle = document.getElementById('belief-toggle');
         const restaurantTemplateBtn = document.getElementById('restaurant-template-btn');
         const partyTemplateBtn = document.getElementById('party-template-btn');
         const linkModeBtn = document.getElementById('link-mode-btn');
@@ -1151,7 +1232,7 @@
                 (outgoing.get(currentId) || []).forEach(nextId => {
                     if (path.includes(nextId)) return;
                     const nextNode = nodeById.get(nextId);
-                    if (!nextNode || !['prod', 'goal'].includes(nextNode.row)) return;
+                    if (!nextNode || !['prod', 'belief', 'goal'].includes(nextNode.row)) return;
                     walk(nextId, [...path, nextId]);
                 });
             };
@@ -1169,6 +1250,47 @@
                 if (flow.length < 2) return;
                 const key = flow.join('>');
                 if (!unique.has(key)) unique.set(key, flow);
+            });
+
+            return [...unique.values()];
+        }
+
+        function getVisibleFlow(flow) {
+            if (beliefExpanded) return flow;
+            return flow.filter(id => nodeById.get(id)?.row !== 'belief');
+        }
+
+        function getVisibleStaticLinks() {
+            const validLinks = state.links.filter(link => nodeById.has(link.from) && nodeById.has(link.to));
+            if (beliefExpanded) return validLinks;
+
+            const visibleLinks = validLinks.filter(link => {
+                return nodeById.get(link.from)?.row !== 'belief' && nodeById.get(link.to)?.row !== 'belief';
+            });
+            const proxyLinks = [];
+
+            state.nodes
+                .filter(node => node.row === 'belief')
+                .forEach(beliefNode => {
+                    const incoming = validLinks.filter(link => link.to === beliefNode.id);
+                    const outgoing = validLinks.filter(link => link.from === beliefNode.id);
+                    incoming.forEach(inLink => {
+                        outgoing.forEach(outLink => {
+                            if (inLink.from === outLink.to) return;
+                            proxyLinks.push({
+                                id: `proxy-${inLink.from}-${outLink.to}`,
+                                from: inLink.from,
+                                to: outLink.to,
+                                proxy: true
+                            });
+                        });
+                    });
+                });
+
+            const unique = new Map();
+            [...visibleLinks, ...proxyLinks].forEach(link => {
+                const key = `${link.from}>${link.to}`;
+                if (!unique.has(key)) unique.set(key, link);
             });
 
             return [...unique.values()];
@@ -1469,6 +1591,22 @@
             toggleEditBtn.classList.toggle('active', editMode);
         }
 
+        function updateBeliefSection() {
+            canvas.classList.toggle('belief-collapsed', !beliefExpanded);
+            if (beliefToggle) {
+                beliefToggle.setAttribute('aria-expanded', String(beliefExpanded));
+            }
+        }
+
+        function toggleBeliefSection(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            beliefExpanded = !beliefExpanded;
+            updateBeliefSection();
+            scheduleDraw();
+        }
+
         function renderRows() {
             rebuildLookup();
 
@@ -1487,6 +1625,58 @@
             updateToolbarState();
         }
 
+        function createThoughtBubbleLabel(text) {
+            const svgNs = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(svgNs, 'svg');
+            svg.setAttribute('class', 'thought-bubble');
+            svg.setAttribute('width', '220');
+            svg.setAttribute('height', '170');
+            svg.setAttribute('viewBox', '0 0 200 170');
+            svg.setAttribute('aria-hidden', 'true');
+
+            const smallCircle = document.createElementNS(svgNs, 'circle');
+            smallCircle.setAttribute('cx', '38');
+            smallCircle.setAttribute('cy', '144');
+            smallCircle.setAttribute('r', '8');
+            smallCircle.setAttribute('fill', 'white');
+            smallCircle.setAttribute('stroke', 'black');
+            smallCircle.setAttribute('stroke-width', '2');
+            svg.appendChild(smallCircle);
+
+            const mediumCircle = document.createElementNS(svgNs, 'circle');
+            mediumCircle.setAttribute('cx', '62');
+            mediumCircle.setAttribute('cy', '124');
+            mediumCircle.setAttribute('r', '12');
+            mediumCircle.setAttribute('fill', 'white');
+            mediumCircle.setAttribute('stroke', 'black');
+            mediumCircle.setAttribute('stroke-width', '2');
+            svg.appendChild(mediumCircle);
+
+            const ellipse = document.createElementNS(svgNs, 'ellipse');
+            ellipse.setAttribute('cx', '110');
+            ellipse.setAttribute('cy', '68');
+            ellipse.setAttribute('rx', '80');
+            ellipse.setAttribute('ry', '55');
+            ellipse.setAttribute('fill', 'white');
+            ellipse.setAttribute('stroke', 'black');
+            ellipse.setAttribute('stroke-width', '2');
+            svg.appendChild(ellipse);
+
+            const foreignObject = document.createElementNS(svgNs, 'foreignObject');
+            foreignObject.setAttribute('x', '47');
+            foreignObject.setAttribute('y', '34');
+            foreignObject.setAttribute('width', '126');
+            foreignObject.setAttribute('height', '72');
+
+            const label = document.createElement('span');
+            label.className = 'node-label';
+            label.textContent = text;
+            foreignObject.appendChild(label);
+            svg.appendChild(foreignObject);
+
+            return { svg, label };
+        }
+
         function createNodeElement(node) {
             const el = document.createElement('div');
             el.className = `card ${node.row}`;
@@ -1498,10 +1688,15 @@
             el.draggable = editMode;
             el.title = editMode ? 'Dubbelklicka för att redigera' : el.title;
 
-            const label = document.createElement('span');
-            label.className = 'node-label';
-            label.textContent = node.label;
-            el.appendChild(label);
+            if (node.row === 'belief') {
+                const thoughtBubble = createThoughtBubbleLabel(node.label);
+                el.appendChild(thoughtBubble.svg);
+            } else {
+                const label = document.createElement('span');
+                label.className = 'node-label';
+                label.textContent = node.label;
+                el.appendChild(label);
+            }
 
             if (node.row === 'act') {
                 el.classList.add('activity-node');
@@ -2176,7 +2371,7 @@
         function drawCanvas() {
             svgLayer.innerHTML = '';
 
-            const staticLinks = state.links.filter(link => nodeById.has(link.from) && nodeById.has(link.to));
+            const staticLinks = getVisibleStaticLinks();
             const showFlows = !editMode && !(activeEditNodeId || activeConnection || activityAdjust);
 
             staticLinks.forEach(link => {
@@ -2189,9 +2384,9 @@
                 hitPath.setAttribute('stroke', 'rgba(148, 163, 184, 0.01)');
                 hitPath.setAttribute('stroke-width', '16');
                 hitPath.setAttribute('pointer-events', 'stroke');
-                hitPath.style.cursor = editMode ? 'pointer' : 'default';
+                hitPath.style.cursor = editMode && !link.proxy ? 'pointer' : 'default';
                 hitPath.addEventListener('click', (event) => {
-                    if (!editMode) return;
+                    if (!editMode || link.proxy) return;
                     event.stopPropagation();
                     selectLink(link.id);
                 });
@@ -2211,8 +2406,11 @@
 
             if (showFlows) {
                 const activeEnergy = getEnergyFlowsForRender()
+                    .map(getVisibleFlow)
                     .filter(flow => flow.length > 1 && !disabledGoals.has(flow[flow.length - 1]));
-                const activeDemand = state.demandFlows.filter(flow => !disabledGoals.has(flow[flow.length - 1]));
+                const activeDemand = state.demandFlows
+                    .map(getVisibleFlow)
+                    .filter(flow => flow.length > 1 && !disabledGoals.has(flow[flow.length - 1]));
 
                 activeEnergy.forEach(flow => {
                     const pathStr = createPathString(flow);
@@ -2271,6 +2469,7 @@
 
         if (createNewBtn) createNewBtn.addEventListener('click', createNewCanvas);
         if (toggleEditBtn) toggleEditBtn.addEventListener('click', toggleEditMode);
+        if (beliefToggle) beliefToggle.addEventListener('click', toggleBeliefSection);
         if (restaurantTemplateBtn) restaurantTemplateBtn.addEventListener('click', loadRestaurantTemplate);
         if (partyTemplateBtn) partyTemplateBtn.addEventListener('click', loadPartyTemplate);
         if (linkModeBtn) linkModeBtn.addEventListener('click', toggleLinkMode);
@@ -2328,6 +2527,7 @@
         });
         window.addEventListener('load', () => {
             syncRowSelection();
+            updateBeliefSection();
             renderRows();
             scheduleDraw();
         });
