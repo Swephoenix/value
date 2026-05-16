@@ -14,6 +14,7 @@
             
             --color-origin: #EF4444; 
             --color-goal: #F59E0B;   
+            --color-belief: #EC4899;
             --color-prod: #3B82F6;   
             --color-act: #8B5CF6;    
             --color-dept: #10B981;   
@@ -350,6 +351,14 @@
             padding-bottom: 12px;
         }
 
+        .row-label.label-belief {
+            color: #BE185D;
+            font-size: 0.84rem;
+            line-height: 1.18;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
         .row-label span.sub-label {
             font-size: 0.65rem;
             font-weight: 500;
@@ -576,6 +585,7 @@
         }
 
         .card.origin { border-left: 4px solid var(--color-origin); background: #FEF2F2; }
+        .card.belief { border-left: 4px solid var(--color-belief); }
         .card.prod { border-left: 4px solid var(--color-prod); }
         .card.act { border-left: 4px solid var(--color-act); }
         .card.dept { border-left: 4px solid var(--color-dept); }
@@ -734,6 +744,9 @@
         </div>
         <div class="row-content" id="row-goal" data-row="goal"></div>
 
+        <div class="row-label label-belief">Vad kunden inbillar sig få i utbyte mot betalning</div>
+        <div class="row-content" id="row-belief" data-row="belief"></div>
+
         <div class="row-label label-prod">Lösning</div>
         <div class="row-content" id="row-prod" data-row="prod"></div>
 
@@ -747,7 +760,7 @@
 
     <script>
         const STORAGE_KEY = 'value-canvas-editor-state-v1';
-        const ROW_ORDER = ['origin', 'goal', 'prod', 'act', 'dept', 'ind'];
+        const ROW_ORDER = ['origin', 'goal', 'belief', 'prod', 'act', 'dept', 'ind'];
 
         const defaultState = {
             nodes: [
